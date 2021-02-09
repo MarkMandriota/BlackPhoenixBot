@@ -43,6 +43,7 @@ func main() {
 	}
 	defer s.Close()
 
+	log.Printf("Loaded commands: %v", cmds.List)
 	log.Printf("Bot is running...")
 
 	wait := make(chan os.Signal)
@@ -62,12 +63,15 @@ func messageCreate(s *dg.Session, m *dg.MessageCreate) {
 		}
 	}()
 
+	println("Let's")
 	if !strings.HasPrefix(m.Content, config["prefix"]) || m.Author.Bot {
 		return
 	}
 
+	println("Sucess!")
 	args := strings.Fields(m.Content[len(config["prefix"]):])
-	if cmd := cmds.List[args[0]]; cmd != nil {
+	if cmd, ok := cmds.List[args[0]]; ok {
+		println("Command is running!")
 		cmd.Exec(s, m)
 	}
 }
