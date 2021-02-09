@@ -9,6 +9,7 @@ import (
 	"strings"
 	"syscall"
 
+	"github.com/MarkMandriota/BlackPhoenixBot/cmds"
 	dg "github.com/bwmarrin/discordgo"
 )
 
@@ -35,7 +36,7 @@ func main() {
 
 	s.AddHandler(messageCreate)
 
-	s.Identify.Intents = dg.IntentsGuildMessages
+	//s.Identify.Intents = dg.IntentsGuildMessages
 
 	if err := s.Open(); err != nil {
 		log.Fatalf("Error openning connection")
@@ -63,5 +64,10 @@ func messageCreate(s *dg.Session, m *dg.MessageCreate) {
 
 	if !strings.HasPrefix(m.Content, config["prefix"]) || m.Author.Bot {
 		return
+	}
+
+	args := strings.Fields(m.Content[len(config["prefix"]):])
+	if cmd := cmds.List[args[0]]; cmd != nil {
+		cmd.Exec(s, m)
 	}
 }
