@@ -9,7 +9,7 @@ import (
 	"strings"
 	"syscall"
 
-	"github.com/MarkMandriota/BlackPhoenixBot/cmds"
+	"./cmds"
 	dg "github.com/bwmarrin/discordgo"
 )
 
@@ -43,7 +43,6 @@ func main() {
 	}
 	defer s.Close()
 
-	log.Printf("Loaded commands: %v", cmds.List)
 	log.Printf("Bot is running...")
 
 	wait := make(chan os.Signal)
@@ -63,15 +62,19 @@ func messageCreate(s *dg.Session, m *dg.MessageCreate) {
 		}
 	}()
 
-	println("Let's")
 	if !strings.HasPrefix(m.Content, config["prefix"]) || m.Author.Bot {
+		for _, user := range m.Mentions {
+			if user.ID == s.State.User.ID {
+				s.ChannelMessageSend(m.ChannelID, "Че надо? Мой префикс: "+config["prefix"])
+				break
+			}
+		}
+
 		return
 	}
 
-	println("Sucess!")
 	args := strings.Fields(m.Content[len(config["prefix"]):])
-	if cmd, ok := cmds.List[args[0]]; ok {
-		println("Command is running!")
-		cmd.Exec(s, m)
+	if cmd, ok := cmds.Map[args[0]]; ok {
+		cmd.Exec(s, m, args...)
 	}
 }

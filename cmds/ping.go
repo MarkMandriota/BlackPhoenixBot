@@ -8,17 +8,21 @@ import (
 
 type ping struct{}
 
-func (p *ping) Info() string {
-	return "simple command for testing delay of the bot"
+func (*ping) Info(...string) string {
+	return "Usage: <prefix>ping\nsimple command for testing delay of the bot"
 }
 
-func (p *ping) Exec(s *dg.Session, m *dg.MessageCreate) {
-	end, _ := m.Timestamp.Parse()
-	delay := time.Since(end)
+func (*ping) Exec(s *dg.Session, m *dg.MessageCreate, a ...string) {
+	start, _ := m.Timestamp.Parse()
+	delay := time.Since(start)
 
 	s.ChannelMessageSendEmbed(m.ChannelID, &dg.MessageEmbed{
-		Color:       0xFF00FF,
-		Title:       "Pong!",
+		Color: 0xFF00FF,
+		Title: "Pong!",
+		Author: &dg.MessageEmbedAuthor{
+			Name:    m.Author.Username,
+			IconURL: m.Author.AvatarURL(""),
+		},
 		Description: "Ping: " + delay.String(),
 	})
 }
