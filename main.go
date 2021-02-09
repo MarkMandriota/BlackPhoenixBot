@@ -9,7 +9,7 @@ import (
 	"strings"
 	"syscall"
 
-	"./cmds"
+	"github.com/MarkMandriota/BlackPhoenixBot/cmds"
 	dg "github.com/bwmarrin/discordgo"
 )
 
