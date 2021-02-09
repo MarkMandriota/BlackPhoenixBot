@@ -1,7 +1,7 @@
 # BlackPhoenix
 Discord bot
 
-**Install**
+**Install:**
 ```cmd
 go get github.com/MarkMandriota/BlackPhoenixBot
 ```
