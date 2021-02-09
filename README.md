@@ -1,2 +1,2 @@
-# BlackPhoenixBot
+# BlackPhoenix
 Discord bot
