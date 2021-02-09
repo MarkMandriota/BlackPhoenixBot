@@ -8,5 +8,6 @@ go get github.com/MarkMandriota/BlackPhoenixBot
 
 **Compile:**
 ```cmd
-go build -ldflags "-s -w"
+cd %GOPATH%/github.com/MarkMandriota/BlackPhoenixBot
+go build
 ```
