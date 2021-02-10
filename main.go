@@ -36,7 +36,7 @@ func main() {
 
 	s.AddHandler(messageCreate)
 
-	//s.Identify.Intents = dg.IntentsGuildMessages
+	s.Identify.Intents = dg.IntentsGuildMessages
 
 	if err := s.Open(); err != nil {
 		log.Fatalf("Error openning connection")

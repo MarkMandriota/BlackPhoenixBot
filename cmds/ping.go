@@ -9,7 +9,8 @@ import (
 type ping struct{}
 
 func (*ping) Info(...string) string {
-	return "Usage: <prefix>ping\nsimple command for testing delay of the bot"
+	return `Usage: <prefix>ping
+			simple command for testing delay of the bot`
 }
 
 func (*ping) Exec(s *dg.Session, m *dg.MessageCreate, a ...string) {

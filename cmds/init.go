@@ -5,15 +5,18 @@ import (
 )
 
 type Command interface {
-	Info(a ...string) string
-	Exec(s *dg.Session, m *dg.MessageCreate, a ...string)
+	Info(a ...string) string                              // Info about command
+	Exec(s *dg.Session, m *dg.MessageCreate, a ...string) // execute command
 }
 
 var Map map[string]Command
 
 func init() {
 	Map = map[string]Command{
-		"help": new(help),
-		"ping": new(ping),
+		"help":  &help{},
+		"ping":  &ping{},
+		"send":  &send{},
+		"info":  &info{},
+		"clear": &clear{},
 	}
 }

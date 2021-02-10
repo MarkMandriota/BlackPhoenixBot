@@ -9,10 +9,12 @@ import (
 type help struct{}
 
 func (*help) Info(a ...string) string {
-	if len(a) > 0 {
-		return Map[a[0]].Info(a[1:]...)
+	switch len(a) {
+	case 0:
+		return `Usage: <prefix>help <?command>
+				Show info about commands`
 	}
-	return "Usage: <prefix>help <?command>\nShow info about commands"
+	return Map[a[0]].Info(a[1:]...)
 }
 
 func (*help) Exec(s *dg.Session, m *dg.MessageCreate, a ...string) {
