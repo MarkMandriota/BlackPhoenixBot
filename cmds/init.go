@@ -5,8 +5,8 @@ import (
 )
 
 type Command interface {
-	Info(a ...string) string                              // Info about command
-	Exec(s *dg.Session, m *dg.MessageCreate, a ...string) // execute command
+	Info(a ...string) string
+	Exec(s *dg.Session, m *dg.MessageCreate, a ...string)
 }
 
 var Map map[string]Command

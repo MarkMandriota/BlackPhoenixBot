@@ -1,7 +1,6 @@
 package cmds
 
 import (
-	"fmt"
 	"strconv"
 
 	dg "github.com/bwmarrin/discordgo"
@@ -15,17 +14,27 @@ func (*clear) Info(...string) string {
 }
 
 func (*clear) Exec(s *dg.Session, m *dg.MessageCreate, a ...string) {
-	perm, err := s.UserChannelPermissions(m.Author.ID, m.ChannelID)
-	if err != nil {
-		panic(err)
-	}
-	fmt.Printf("%x", perm)
-	if perm&0x00002000 != 0x00002000 && perm&0x00000008 != 0x00000008 {
-		return
+	roles := make(map[string]struct{}, len(m.Member.Roles))
+	for _, role := range m.Member.Roles {
+		roles[role] = struct{}{}
 	}
 
+	guildRoles, _ := s.GuildRoles(m.GuildID)
+	for _, role := range guildRoles {
+		if _, ok := roles[role.ID]; ok && (role.Permissions&8192 == 8192 || role.Permissions&8 == 8) {
+			goto ok
+		}
+	}
+
+	panic(&dg.MessageEmbed{
+		Color:       0xFF0000,
+		Title:       "ERROR",
+		Description: "Not enough permissions",
+	})
+ok:
+
 	num := 100
-	if len(a) > 1 {
+	if err := error(nil); len(a) > 1 {
 		num, err = strconv.Atoi(a[1])
 		if err != nil {
 			panic(&dg.MessageEmbed{
