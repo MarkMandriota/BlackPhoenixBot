@@ -75,6 +75,24 @@ func messageCreate(s *dg.Session, m *dg.MessageCreate) {
 
 	args := strings.Fields(m.Content[len(config["prefix"]):])
 	if cmd, ok := cmds.Map[args[0]]; ok {
+		roles := make(map[string]struct{}, len(m.Member.Roles))
+		for _, role := range m.Member.Roles {
+			roles[role] = struct{}{}
+		}
+
+		guildRoles, _ := s.GuildRoles(m.GuildID)
+		for _, role := range guildRoles {
+			if _, ok := roles[role.ID]; ok && (role.Permissions&cmd.Perm() == cmd.Perm() || role.Permissions&8 == 8) {
+				goto ok
+			}
+		}
+
+		panic(&dg.MessageEmbed{
+			Color:       0xFF0000,
+			Title:       `ERROR`,
+			Description: `Not enough your permissions`,
+		})
+	ok:
 		cmd.Exec(s, m, args...)
 	}
 }

@@ -13,34 +13,19 @@ func (*clear) Info(...string) string {
 			Clear certain number of message`
 }
 
+func (*clear) Perm(a ...string) int64 {
+	return dg.PermissionManageMessages
+}
+
 func (*clear) Exec(s *dg.Session, m *dg.MessageCreate, a ...string) {
-	roles := make(map[string]struct{}, len(m.Member.Roles))
-	for _, role := range m.Member.Roles {
-		roles[role] = struct{}{}
-	}
-
-	guildRoles, _ := s.GuildRoles(m.GuildID)
-	for _, role := range guildRoles {
-		if _, ok := roles[role.ID]; ok && (role.Permissions&8192 == 8192 || role.Permissions&8 == 8) {
-			goto ok
-		}
-	}
-
-	panic(&dg.MessageEmbed{
-		Color:       0xFF0000,
-		Title:       "ERROR",
-		Description: "Not enough permissions",
-	})
-ok:
-
 	num := 100
 	if err := error(nil); len(a) > 1 {
 		num, err = strconv.Atoi(a[1])
 		if err != nil {
 			panic(&dg.MessageEmbed{
 				Color:       0xFF0000,
-				Title:       "ERROR",
-				Description: "Argument has not integer type",
+				Title:       `ERROR`,
+				Description: `Argument has not integer type`,
 			})
 		}
 	}

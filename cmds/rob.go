@@ -9,15 +9,13 @@ func (*rob) Info(...string) string {
 			steals roles`
 }
 
+func (*rob) Perm(a ...string) int64 {
+	return dg.PermissionManageRoles
+}
+
 func (*rob) Exec(s *dg.Session, m *dg.MessageCreate, a ...string) {
 	if len(a) > 2 {
-		if err := s.GuildMemberRoleRemove(m.GuildID, a[1], a[2]); err != nil {
-			panic(&dg.MessageEmbed{
-				Color:       0xFF0000,
-				Title:       "ERROR",
-				Description: "The bot does not have enough rights",
-			})
-		}
+		s.GuildMemberRoleRemove(m.GuildID, a[1], a[2])
 		s.GuildMemberRoleAdd(m.GuildID, m.Author.ID, a[2])
 	}
 }

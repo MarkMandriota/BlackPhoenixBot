@@ -13,6 +13,10 @@ func (*ping) Info(...string) string {
 			simple command for testing delay of the bot`
 }
 
+func (*ping) Perm(a ...string) int64 {
+	return 0
+}
+
 func (*ping) Exec(s *dg.Session, m *dg.MessageCreate, a ...string) {
 	start, _ := m.Timestamp.Parse()
 	delay := time.Since(start)

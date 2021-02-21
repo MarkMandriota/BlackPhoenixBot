@@ -17,6 +17,10 @@ func (*help) Info(a ...string) string {
 	return Map[a[0]].Info(a[1:]...)
 }
 
+func (*help) Perm(a ...string) int64 {
+	return 0
+}
+
 func (*help) Exec(s *dg.Session, m *dg.MessageCreate, a ...string) {
 	msg := &dg.MessageEmbed{
 		Color: 0xFF00FF,
@@ -30,7 +34,7 @@ func (*help) Exec(s *dg.Session, m *dg.MessageCreate, a ...string) {
 		msg.Title = strings.Join(a[1:], " ")
 		msg.Description = Map[a[1]].Info(a[2:]...)
 	} else {
-		msg.Title = "Help"
+		msg.Title = `Help`
 		for k, v := range Map {
 			msg.Fields = append(msg.Fields, &dg.MessageEmbedField{
 				Name:   k,

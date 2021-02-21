@@ -13,6 +13,10 @@ func (*send) Info(...string) string {
 			Send message`
 }
 
+func (*send) Perm(a ...string) int64 {
+	return 0
+}
+
 func (*send) Exec(s *dg.Session, m *dg.MessageCreate, a ...string) {
 	msg := &dg.MessageEmbed{
 		Color: 0xFF00FF,
