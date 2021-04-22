@@ -27,7 +27,5 @@ func init() {
 }
 
 func main() {
-	fmt.Println(reflect.ValueOf(math.Sqrt).Call([]reflect.Value{
-		reflect.ValueOf(2.),
-	})[0].Interface())
+
 }
