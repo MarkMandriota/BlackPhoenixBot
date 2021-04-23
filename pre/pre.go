@@ -24,11 +24,14 @@ func NewText(group uint64, inner string) *Text {
 
 func (t *Text) Parse() string {
 	t.in = r_var.ReplaceAllFunc(t.in, func(str []byte) []byte {
-		ident := string(r_ident.Find(str))
+		expr := string(r_var.Find(str))
 
-		var value string
+		var ident, value string
 		if i := strings.IndexByte(string(str), '='); i > 0 {
+			ident = expr[:i]
 			value = NewText(t.g, strings.Trim(string(r_value.Find(str[i+1:])), "\"")).Parse()
+		} else {
+			ident = expr
 		}
 
 		if len(value) > 0 {
