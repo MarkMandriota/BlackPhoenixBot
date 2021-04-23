@@ -1,10 +1,10 @@
 package main
 
 import (
-	"fmt"
-	"math"
 	"os"
 	"reflect"
+
+	dg "github.com/bwmarrin/discordgo"
 )
 
 var config = struct {
@@ -27,5 +27,15 @@ func init() {
 }
 
 func main() {
+	s, err := dg.New(config.Token)
+	if err != nil {
+		panic(err)
+	}
 
+	if err = s.Open(); err != nil {
+		panic(err)
+	}
+	defer s.Close()
+
+	<-make(chan struct{})
 }
