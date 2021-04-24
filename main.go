@@ -7,13 +7,13 @@ import (
 	dg "github.com/bwmarrin/discordgo"
 )
 
-var config = struct {
+var Config = struct {
 	Token  string `env:"TOKEN"`
 	Prefix string `env:"PREFIX"`
 }{}
 
 func init() {
-	confV := reflect.ValueOf(&config).Elem()
+	confV := reflect.ValueOf(&Config).Elem()
 	confT := confV.Type()
 
 	for i := 0; i < confV.NumField(); i++ {
@@ -27,7 +27,7 @@ func init() {
 }
 
 func main() {
-	s, err := dg.New(config.Token)
+	s, err := dg.New(Config.Token)
 	if err != nil {
 		panic(err)
 	}
