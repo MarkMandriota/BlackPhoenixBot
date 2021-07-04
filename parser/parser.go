@@ -32,22 +32,22 @@ type MagicParser interface {
 	NextRoutine(r *Routine) bool
 }
 
-// FastMagicParser - fast implementation of MagicParser.
-type FastMagicParser struct {
+// FastParser - fast implementation of MagicParser.
+type FastParser struct {
 	FI io.ByteScanner
 
 	cc byte
 	bf strings.Builder
 }
 
-// NewFastMagicParser - inits with fi and returns new FastMagicParser.
-func NewFastMagicParser(fi io.ByteScanner) *FastMagicParser {
-	return &FastMagicParser{FI: fi}
+// NewFastParser - inits with fi and returns new FastMagicParser.
+func NewFastParser(fi io.ByteScanner) *FastParser {
+	return &FastParser{FI: fi}
 }
 
 // NextRoutine - implements MagicParser.NextRoutine.
 //go:nosplit
-func (m *FastMagicParser) NextRoutine(r *Routine) bool {
+func (m *FastParser) NextRoutine(r *Routine) bool {
 	if r == nil {
 		panic("nil pointer")
 	}
@@ -90,16 +90,16 @@ func (m *FastMagicParser) NextRoutine(r *Routine) bool {
 	return false
 }
 
-func (m *FastMagicParser) skipComment() {
+func (m *FastParser) skipComment() {
 	for m.nextB() != '#' {}
 }
 
-func (m *FastMagicParser) nextB() byte {
+func (m *FastParser) nextB() byte {
 	m.cc, _ = m.FI.ReadByte()
 	return m.cc
 }
 
-func (m *FastMagicParser) nextW() string {
+func (m *FastParser) nextW() string {
 	m.bf.Reset()
 
 	for m.nextB() != 0 && (isLetter(m.cc) || isDigit(m.cc)) {
@@ -109,7 +109,7 @@ func (m *FastMagicParser) nextW() string {
 	return m.bf.String()
 }
 
-func (m *FastMagicParser) nextS() string {
+func (m *FastParser) nextS() string {
 	m.bf.Reset()
 
 	for m.nextB() != 0 && m.cc != '"' {
