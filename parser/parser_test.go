@@ -14,7 +14,7 @@ const magic = `has "this line :3" &magic_parser`
 
 func TestParser_Parse(t *testing.T) {
 	dst := Routine{}
-	NewFastParser(strings.NewReader(magic)).NextRoutine(&dst)
+	NewParser(strings.NewReader(magic)).NextRoutine(&dst)
 
 	t.Log(dst)
 	if assert.Equal(t, Routine{
@@ -32,7 +32,7 @@ func TestParser_Parse(t *testing.T) {
 
 func BenchmarkParser_Parse(b *testing.B) {
 	r := new(strings.Reader)
-	p := NewFastParser(r)
+	p := NewParser(r)
 
 	c := &Routine{Args: make([]Token, 0, 1<<0xB)}
 	for i := 0; i < b.N; i++ {

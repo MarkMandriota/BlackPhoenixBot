@@ -32,56 +32,56 @@ type MagicParser interface {
 	NextRoutine(r *Routine) bool
 }
 
-// FastParser - fast implementation of MagicParser.
-type FastParser struct {
+// Parser - fast implementation of MagicParser.
+type Parser struct {
 	FI io.ByteScanner
 
 	cc byte
 	bf strings.Builder
 }
 
-// NewFastParser - inits with fi and returns new FastMagicParser.
-func NewFastParser(fi io.ByteScanner) *FastParser {
-	return &FastParser{FI: fi}
+// NewParser - inits with fi and returns new FastMagicParser.
+func NewParser(fi io.ByteScanner) *Parser {
+	return &Parser{FI: fi}
 }
 
 // NextRoutine - implements MagicParser.NextRoutine.
 //go:nosplit
-func (m *FastParser) NextRoutine(r *Routine) bool {
+func (p *Parser) NextRoutine(r *Routine) bool {
 	if r == nil {
 		panic("nil pointer")
 	}
 
 	r.Name, r.Args = r.Name[:0], r.Args[:0]
 
-	for m.nextB() != 0 {
-		switch m.cc {
+	for p.nextB() != 0 {
+		switch p.cc {
 		case ' ', '\n', '\r', '\t', '\v':
 		case '#':
-			m.skipComment()
+			p.skipComment()
 		case '&':
-			r.Name = m.nextW()
+			r.Name = p.nextW()
 			return true
 		case ':':
 			r.Args = append(r.Args, Token{
 					T: ID,
-					V: m.nextW(),
+					V: p.nextW(),
 			})
 		case '"':
 			r.Args = append(r.Args, Token{
 				T: DS,
-				V: m.nextS(),
+				V: p.nextS(),
 			})
 		default:
-			m.FI.UnreadByte()
+			p.FI.UnreadByte()
 
 			switch {
-			case isDigit(m.cc):
+			case isDigit(p.cc):
 				fallthrough
-			case isLetter(m.cc):
+			case isLetter(p.cc):
 				r.Args = append(r.Args, Token{
 					T: DW,
-					V: m.nextW(),
+					V: p.nextW(),
 				})
 			}
 		}
@@ -90,42 +90,42 @@ func (m *FastParser) NextRoutine(r *Routine) bool {
 	return false
 }
 
-func (m *FastParser) skipComment() {
-	for m.nextB() != '#' {}
+func (p *Parser) skipComment() {
+	for p.nextB() != '#' {}
 }
 
-func (m *FastParser) nextB() byte {
-	m.cc, _ = m.FI.ReadByte()
-	return m.cc
+func (p *Parser) nextB() byte {
+	p.cc, _ = p.FI.ReadByte()
+	return p.cc
 }
 
-func (m *FastParser) nextW() string {
-	m.bf.Reset()
+func (p *Parser) nextW() string {
+	p.bf.Reset()
 
-	for m.nextB() != 0 && (isLetter(m.cc) || isDigit(m.cc)) {
-		m.bf.WriteByte(m.cc)
+	for p.nextB() != 0 && (isLetter(p.cc) || isDigit(p.cc)) {
+		p.bf.WriteByte(p.cc)
 	}
 
-	return m.bf.String()
+	return p.bf.String()
 }
 
-func (m *FastParser) nextS() string {
-	m.bf.Reset()
+func (p *Parser) nextS() string {
+	p.bf.Reset()
 
-	for m.nextB() != 0 && m.cc != '"' {
-		if m.cc == '\\' {
-			switch m.nextB() | 0x20 {
+	for p.nextB() != 0 && p.cc != '"' {
+		if p.cc == '\\' {
+			switch p.nextB() | 0x20 {
 			case '"', '\\':
-				m.bf.WriteByte(m.cc)
+				p.bf.WriteByte(p.cc)
 			default:
-				m.FI.UnreadByte()
+				p.FI.UnreadByte()
 			}
 			continue
 		}
-		m.bf.WriteByte(m.cc)
+		p.bf.WriteByte(p.cc)
 	}
 
-	return m.bf.String()
+	return p.bf.String()
 }
 
 func isDigit(c byte) bool {
