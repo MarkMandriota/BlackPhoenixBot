@@ -1,0 +1,9 @@
+# MAGIC PARSER FILE #
+
+:lf "out.log" &st
+
+    :token "Bot TOKEN"
+&cf &rb
+
+    "bot has configured .."
+&log
