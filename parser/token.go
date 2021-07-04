@@ -16,7 +16,4 @@ const (
 	ID Type = iota // Identifier
 	DW // Data Word
 	DS // Data String
-	DI // Data Integer
-	DH // Data Hex
-	DF // Data Float
 )
