@@ -2,8 +2,8 @@
 
 :lf "out.log" &st
 
-    :token "Bot TOKEN"
+    :tk "Bot TOKEN"
 &cf &rb
 
     "bot has configured .."
-&log
+&lg

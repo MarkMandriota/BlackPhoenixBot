@@ -32,9 +32,9 @@ type MagicParser interface {
 	NextRoutine(r *Routine) bool
 }
 
-// Parser - fast implementation of MagicParser.
+// Parser - implementation of MagicParser.
 type Parser struct {
-	FI io.ByteScanner
+	fi io.ByteScanner
 
 	cc byte
 	bf strings.Builder
@@ -42,7 +42,7 @@ type Parser struct {
 
 // NewParser - inits with fi and returns new FastMagicParser.
 func NewParser(fi io.ByteScanner) *Parser {
-	return &Parser{FI: fi}
+	return &Parser{fi: fi}
 }
 
 // NextRoutine - implements MagicParser.NextRoutine.
@@ -73,7 +73,7 @@ func (p *Parser) NextRoutine(r *Routine) bool {
 				V: p.nextS(),
 			})
 		default:
-			p.FI.UnreadByte()
+			p.fi.UnreadByte()
 
 			switch {
 			case isDigit(p.cc):
@@ -95,7 +95,7 @@ func (p *Parser) skipComment() {
 }
 
 func (p *Parser) nextB() byte {
-	p.cc, _ = p.FI.ReadByte()
+	p.cc, _ = p.fi.ReadByte()
 	return p.cc
 }
 
@@ -118,7 +118,7 @@ func (p *Parser) nextS() string {
 			case '"', '\\':
 				p.bf.WriteByte(p.cc)
 			default:
-				p.FI.UnreadByte()
+				p.fi.UnreadByte()
 			}
 			continue
 		}
