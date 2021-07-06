@@ -5,7 +5,7 @@
 package parser
 
 // Type of Token type
-type Type uint
+type Type int
 
 // Token - result struct of magic lexing.
 type Token struct {

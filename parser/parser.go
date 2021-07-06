@@ -17,10 +17,10 @@ type Routine struct {
 }
 
 // String - implements fmt.Stringer.
-func (c *Routine) String() (s string) {
-	s += fmt.Sprintf("#%s\n", c.Name)
+func (r *Routine) String() (s string) {
+	s += fmt.Sprintf("#%s\n", r.Name)
 
-	for i, arg := range c.Args {
+	for i, arg := range r.Args {
 		s += fmt.Sprintf("\t%d: T=%d V=%s\n", i, arg.T, arg.V)
 	}
 	return
